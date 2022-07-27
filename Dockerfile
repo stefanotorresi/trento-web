@@ -1,4 +1,4 @@
-FROM registry.opensuse.org/opensuse/leap:15.4 AS system
+FROM registry.suse.com/bci/bci-base:15.4 AS system
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
