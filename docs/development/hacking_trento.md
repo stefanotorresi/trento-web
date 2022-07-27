@@ -23,7 +23,7 @@ In order to run the trento web, you need
 
 The entire environment can be set up with [asdf](http://asdf-vm.com/).
 
-After you installed the `asdf` CLI tool, you need to install all the relevant plugins, and then the requirements.
+After the `asdf` CLI tool was installed, all the relevant plugins and dependencies can be installed as follows:
 
 ```shell
 asdf plugin add erlang 
@@ -32,7 +32,7 @@ asdf plugin add nodejs
 asdf install
 ```
 
-This will install local versions of all the above. Docker is _not_ included, though.
+This will install local versions of all the above. Note that Docker is _not_ included, though.
 
 
 ## Docker and docker-compose
@@ -43,14 +43,13 @@ A `docker-compose` development environment is provided.
 docker-compose up -d
 ```
 
-It will start all the services required to run the application.
+It will start all the services composing the application.
 
-It also provides a `web` service that you can use to run Elixir within a development container.
-This service does nothing by default (i.e. it invokes `bash` with no command), so you will need to attach to it explicitly via an interactive terminal, or run mix commands with it.
+The `web` service can be used to run Elixir within a development container.
+To run mix commands with it, an interactive terminal can be attached to it explicitly:
 
-E.g. to start an interactive containerized terminal session:
 ```shell
-docker-compose run -ti -p 4000:4000 web
+docker-compose exec -ti web bash
 ```
 
 

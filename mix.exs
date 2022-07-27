@@ -95,12 +95,14 @@ defmodule Trento.MixProject do
   defp aliases do
     [
       start: [
+        "docker-compose up -d postgres grafana",
         "install",
         "setup",
-        "phx.server"
+        "serve"
       ],
       install: ["deps.get", "cmd --cd assets npm install"],
       setup: ["event_store.setup", "ecto.setup", "init_grafana_dashboards"],
+      serve: ["phx.server"],
       reset: ["event_store.reset", "ecto.reset"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
