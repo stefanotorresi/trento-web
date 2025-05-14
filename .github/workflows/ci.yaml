@@ -1,13 +1,19 @@
-name: CI
+name: Continous Integration
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+    paths-ignore:
+      - "VERSION"
   pull_request:
     types: [opened, synchronize, labeled]
+    paths-ignore:
+      - "VERSION"
   release:
     types: [published]
   workflow_dispatch:
+  workflow_call:
   repository_dispatch:
     types: [start-ci, deploy-demo]
 
@@ -269,7 +275,7 @@ jobs:
     name: Chromatic deployment
     needs: [elixir-deps, npm-deps]
     runs-on: ubuntu-24.04
-    if: github.event_name != 'repository_dispatch' && github.secret_source != 'None'
+    if: github.event_name != 'repository_dispatch' && github.secret_source != 'None' && vars.ENABLE_CHROMATIC
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.12.1
@@ -810,6 +816,9 @@ jobs:
         uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96
         with:
           images: ${{ env.IMAGE_REPOSITORY }}
+      - name: Get version from git history
+        id: get_version_from_git
+        run: echo "version=$(hack/get_version_from_git.sh)" >> $GITHUB_OUTPUT
       - name: Build and push container image
         uses: docker/build-push-action@v6
         with:
@@ -819,6 +828,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            VERSION=${{ steps.get_version_from_git.outputs.version }}
 
   build-demo-img:
     name: Build the docker image for the demo environment
@@ -848,6 +859,9 @@ jobs:
         uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96
         with:
           images: ${{ env.IMAGE_REPOSITORY }}
+      - name: Get version from git history
+        id: get_version_from_git
+        run: echo "version=$(hack/get_version_from_git.sh)" >> $GITHUB_OUTPUT
       - name: Build and push container image
         uses: docker/build-push-action@v6
         with:
@@ -857,7 +871,9 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          build-args: MIX_ENV=demo
+          build-args: |
+            VERSION=${{ steps.get_version_from_git.outputs.version }}
+            MIX_ENV=demo
 
   deploy-demo-env:
     name: Deploy updated images to the demo environment
