@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.5.2](https://github.com/trento-project/web/tree/2.4.0/compare/2.5.1...2.5.2) - 2025-05-19
+
+### What's Changed
+
+* No changes
+
+**Full Changelog**: https://github.com/stefanotorresi/web/compare/2.5.1...2.5.2
+
 ## [2.5.1](https://github.com/trento-project/web/tree/2.4.0/compare/2.5.0...2.5.1) - 2025-05-19
 
 ### What's Changed
