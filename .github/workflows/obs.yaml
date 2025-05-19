@@ -7,6 +7,10 @@ on:
         type: boolean
         default: false
         description: Whether or not to update the OBS package changelog. Should only be used contextually to a release.
+      obs_project:
+        type: string
+        required: true
+        description: The OBS project to commit changes to.
     secrets:
       OBS_USER:
         required: true
@@ -14,7 +18,7 @@ on:
         required: true
 
 env:
-  OBS_PROJECT: ${{ vars.OBS_PROJECT }}
+  OBS_PROJECT: ${{ inputs.obs_project }}
   NODE_VERSION: "20"
   AUTHOR_EMAIL: trento-developers@suse.com
 
@@ -36,6 +40,8 @@ jobs:
           access_token: ${{ github.token }}
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Configure git for in-container operations
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
       - name: Get version from git history
         id: get_version_from_git
         run: |
@@ -103,6 +109,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Configure git for in-container operations
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
       - name: Get version from git history
         id: get_version_from_git
         run: |
